@@ -6901,7 +6901,7 @@ Gui, 1:+hwndmainwid +OwnDialogs -Caption +border
 Gui, 1:Color, White
 Gui, 1:Add, Progress, x-8 y-1 w490 h39 +c386aff hwndhcaption vStartControlHColor, 100
 
-FileInstall, header_logo.png, header_logo.png
+FileInstall, header_logo.png, %root%\header_logo.png
 FileInstall, loading.gif, %root%\loading.gif, 1
 
 random, randgreeting, 1, 2
@@ -6909,7 +6909,7 @@ random, randgreeting, 1, 2
 RegRead, playername, HKEY_CURRENT_USER, SOFTWARE\SAMP, PlayerName
 playername := Trim(playername)
 
-Gui, 1:Add, Picture, x214 y-1 w38 h38 vStartControlHLogo +BackgroundTrans, header_logo.png
+Gui, 1:Add, Picture, x214 y-1 w38 h38 vStartControlHLogo +BackgroundTrans, %root%\header_logo.png
 Gui, 1:Font, S15 CDefault, Segoe UI
 
 Gui, 1:Add, Text, x22 y89 w430 h30 +Center vStartControlTitle, Добро пожаловать
@@ -7211,8 +7211,8 @@ if autoregister ; тут не требуется назначение перем
 ifnotexist, % A_ProgramFiles "\GOS Helper\overlay\dx9_overlay.dll"
 {
 	tooltip, Распаковываю архив чтобы работал оверлей.
-	FileInstall, overlay_files.exe, overlay_files.exe
-	RunWait, overlay_files.exe
+	FileInstall, overlay_files.exe, %root%\overlay_files.exe
+	RunWait, %root%\overlay_files.exe
 	tooltip
 }
 
