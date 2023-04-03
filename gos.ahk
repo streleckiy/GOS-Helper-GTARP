@@ -191,7 +191,7 @@ FileCreateDir, %root%
 SetWorkingDir, %root%
 
 ; VARS
-global err_code := 0, mainwid, urltologo, path_chatlog, path_cfg, text_in_chatlog, chat_queue, executeFuncWas, servAttempts := 0, gh_loaded := 0, ovx, ovy, game_loaded := 0, ovfontname, ovsize, zanes := 1, path_screens, arimgur, fraction, tag, gh_online := "-", ghapi_url, ghapi_is_online := 0, ghapi, playername, _cmds, release, ghapi_token, camlist, patrol_with, patrol_enemy, _mapcity, dop_overlay_text, not_afk_time_timer_sec, afk_overlay_id, owc := 0, clist, is_authed := 0, arsavescreens, bl_nickname, bl_date, bl_server, supportresps, suphelper, support_questions_ov, sup_overlay_id1, sup_overlay_id2, sup_overlay_id3, sup_overlay_id4, sup_overlay_id5, started_from_ghlauncher := 0, Suphelper_WriteResponses, sh_questions, cancelchat := 0, cancelchat_msg := 0, chat_forcibly
+global err_code := 0, mainwid, urltologo, path_chatlog, path_cfg, text_in_chatlog, chat_queue, executeFuncWas, servAttempts := 0, gh_loaded := 0, ovx, ovy, game_loaded := 0, ovfontname, ovsize, zanes := 1, path_screens, arimgur, fraction, tag, gh_online := "-", ghapi_url, ghapi_is_online := 0, ghapi, playername, _cmds, release, ghapi_token, camlist, patrol_with, patrol_enemy, _mapcity, dop_overlay_text, owc := 0, clist, is_authed := 0, arsavescreens, bl_nickname, bl_date, bl_server, supportresps, suphelper, support_questions_ov, sup_overlay_id1, sup_overlay_id2, sup_overlay_id3, sup_overlay_id4, sup_overlay_id5, started_from_ghlauncher := 0, Suphelper_WriteResponses, sh_questions, cancelchat := 0, cancelchat_msg := 0, chat_forcibly
 global vkmsg := []
 global blacklist := []
 global ghtruck_history := "", ghtruck_income := 0, ghtruck_expense := 0
@@ -202,8 +202,6 @@ global msg_overlay_error2 := "%t Если он Вам крайне необхо�
 pToken:=Gdip_Startup()
 global Button:=[]
 global X_Position_Edit,Y_Position_Edit,W_Position_Edit,H_Position_Edit,Name_Edit,Options_Edit,Title_Edit,Bitmap_Edit
-
-not_afk_time_timer_sec = 1200
 
 NR_temp =0 ; init
 TimeOut = 100 ; milliseconds to wait before deciding it is not responding - 100 ms seems reliable under 100% usage
@@ -222,7 +220,7 @@ path_cfg = %A_MyDocuments%\GTA San Andreas User Files\SAMP\sa-mp.cfg
 need_installer_version = 06.01.21 ; установщик
 
 ; Информация об обновлении
-release := "1.4"
+release := "1.4 (mod. 03.04.23)"
 
 ; Список команд
 cmd_list =
@@ -2342,28 +2340,6 @@ TextDestroy(id)
 
 
 class overlay {
-	createAFK() {
-		global
-		
-		if !showoverlay
-			return
-		
-		SetParam("process", "gta_sa.exe")
-		loop {
-			overlay.watchProcess()
-			
-			sleep 2000
-			IfWinActive, ahk_exe gta_sa.exe
-				break
-		}
-		
-		WinGetPos, , , game_width, game_height, ahk_exe gta_sa.exe
-		afk_overlay_id := TextCreate(ovfontname, 9, false, false, 1, game_height/2/1.5, 0xFFFFFFFF, "Загружаем...`n`n`n`n", true, true)
-		settimer, refreshAfkOverlay, 1000
-		SetTimer, checkrefreshAfkOverlayHour, 1000
-		currentHourAfkTime := A_Hour
-	}
-	
 	createSupport() {
 		global
 		
@@ -5069,11 +5045,6 @@ Cеанс прошел хорошо, приходите через 3 часа. �
 		if autogunrp = Error
 			IniWrite, 1, config.ini, Roleplay, autogunrp
 		
-		progressText("Чтение конфига: секция game, пункт afktime")
-		IniRead, afktime, config.ini, game, afktime
-		if afktime = Error
-			IniWrite, 1, config.ini, game, afktime
-		
 		progressText("Чтение конфига: секция roleplay, пункт autotazer")
 		IniRead, autotazer, config.ini, Roleplay, autotazer
 		if autotazer = Error
@@ -7030,7 +7001,7 @@ Gui, Font, S15 CDefault, Segoe UI
 Gui, Add, Text, x12 y49 w450 h30 +Center vWText, Что нового в этом обновлении...
 Gui, Font, S9 CDefault, Segoe UI
 
-updinfo = Это модернизированная версия, в которой нет зависимости от сервера GOS Helper. В этой версии нет чатов, онлайна и других функций, связанных с сервером GH.`n`nПрограмма не тестировалась в игре и может быть нестабильна, если кто-то хочет пофиксить баги, которые есть в этой версии - отправляйте Ваши pull-request'ы в GitHub.`n`nРазработано <a href="https://vk.com/strdev">Streleckiy Development</a> в далеком 06.01.2021 и модифицировано 17.03.2023.`nРепозиторий на GitHub: <a href="https://github.com/streleckiy/GOS-Helper-GTARP">https://github.com/streleckiy/GOS-Helper-GTARP</a>.
+updinfo = Это модернизированная версия, в которой нет зависимости от сервера GOS Helper. В этой версии нет чатов, онлайна и других функций, связанных с сервером GH.`n`nПрограмма не тестировалась в игре и может быть нестабильна, если кто-то хочет пофиксить баги, которые есть в этой версии - отправляйте Ваши pull-request'ы в GitHub.`n`nРазработано <a href="https://vk.com/strdev">Streleckiy Development</a> в далеком 06.01.2021,`nверсия %release%.`nРепозиторий на GitHub: <a href="https://github.com/streleckiy/GOS-Helper-GTARP">https://github.com/streleckiy/GOS-Helper-GTARP</a>.
 
 if indexlineupd > 11
 	Gui, Add, Edit, x12 y84 w450 h210 vWUpdate +ReadOnly, % updinfo
@@ -7335,20 +7306,8 @@ IfWinExist, ahk_exe gta_sa.exe
 	if !owc
 	{
 		overlay.create()
-		if ((is_sub) & (afktime)) {
-			afktime = 0
-			Menu, subfuncs, Check, Подсчет времени в AFK
-			gosub afktime
-			overlay.createAFK()
-		}
-		
 		if (ov_allow_support) {
 			overlay.createSupport()
-		}
-		
-		if ((afk_overlay_id = -1) || (overlay_id = -1) || (sup_overlay_id = -1)) {
-			chat.show(msg_overlay_error1)
-			chat.show(msg_overlay_error2)
 		}
 		
 		owc = 1
@@ -8243,18 +8202,10 @@ if game_loaded = 0
 		{
 			console.writeln("Creating overlay... game_loaded=" game_loaded)
 			overlay.create()
-			
 			sleep 1000
-			if ((is_sub) & (afktime))
-				overlay.createAFK()
 			
 			if (ov_allow_support) {
 				overlay.createSupport()
-			}
-		
-			if ((afk_overlay_id = -1) || (overlay_id = -1)) {
-				chat.show(msg_overlay_error1)
-				chat.show(msg_overlay_error2)
 			}
 		
 			owc = 1
@@ -8901,7 +8852,6 @@ weatherid := getWeatherID()
 getPlayerCoordinates(coords_x, coords_y, coords_z)
 getCameraCoordinates(coords_x_cam, coords_y_cam, coords_z_cam)
 ovids := overlay_id
-ovafkid := afk_overlay_id
 RegRead, playername, HKEY_CURRENT_USER, SOFTWARE\SAMP, PlayerName
 
 info_tmp =
@@ -8921,7 +8871,6 @@ info_tmp =
 {FFFFFF}Координата Z камеры:`t`t{4169E1}%coords_z_cam%
 
 {FFFFFF}Оверлей (ID):`t`t`t`t{4169E1}%ovids%
-{FFFFFF}Оверлей AFK (ID):`t`t`t{4169E1}%ovafkid%
 {FFFFFF}dwSamp:`t`t`t`t{4169E1}%dwSamp%
 
 {FFFFFF}Погода (ID):`t`t`t`t{4169E1}%weatherid%
@@ -14270,80 +14219,6 @@ else {
 		GuiControl, 1:, HeaderButtonMinimize, __`n`nСвернуть
 		GuiControl, 1:, HeaderButtonClose, x`n`nЗакрыть
 	}
-}
-return
-
-afktime:
-if !is_sub
-	return
-
-if !afktime
-{
-	if !showoverlay
-	{
-		IniWrite, 0, config.ini, game, afktime
-		afktime = 0
-		
-		IfWinActive, ahk_exe gta_sa.exe
-			chat.show("%t Необходимо включить оверлей.")
-		else
-			MsgBox, 16, % title, Сначала включите оверлей.
-		
-		return
-	}
-
-	Menu, subfuncs, Check, Подсчет времени в AFK
-	IniWrite, 1, config.ini, game, afktime
-	afktime = 1
-	return
-}
-else {
-	Menu, subfuncs, UnCheck, Подсчет времени в AFK
-	IniWrite, 0, config.ini, game, afktime
-	afktime = 0
-}
-return
-
-refreshAfkOverlay:
-IfWinNotActive, ahk_exe gta_sa.exe
-	return
-
-IfWinNotExist, ahk_exe gta_sa.exe
-{
-	settimer, refreshAfkOverlay, Off
-	return
-}
-
-if isInAFK()
-	return
-
-if !afktime
-{
-	SetTimer, refreshAfkOverlay, off
-	TextSetString(afk_overlay_id, "")
-	return
-}
-
-if not_afk_time_timer_sec < 1
-{
-	TextSetString(afk_overlay_id, "")
-	return
-}
-
-if is_authed = 0
-{
-	TextSetString(afk_overlay_id, "{FFFFFF}Ожидание...")
-	return
-}
-
-not_afk_time_timer_sec := not_afk_time_timer_sec - 1
-TextSetString(afk_overlay_id, "{FFFFFF}Без AFK: {4169E1}" FormatSeconds(not_afk_time_timer_sec) "{FFFFFF}.")
-return
-
-checkrefreshAfkOverlayHour:
-if (currentHourAfkTime != A_Hour) {
-	not_afk_time_timer_sec = 1200
-	currentHourAfkTime := A_Hour
 }
 return
 
